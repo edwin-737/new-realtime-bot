@@ -1,0 +1,56 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "version": "1.0.0",
+    "manifestVersion": "1.16",
+    "id": "74d27d1a-092f-4b47-8d16-a9b036ca8a9c",
+    "packageName": "com.package.name",
+    "name": {
+        "short": "newRealtimeBot_v2",
+        "full": "newRealtimeBot_v2"
+    },
+    "developer": {
+        "name": "SUTD-UROP",
+        "mpnId": "",
+        "websiteUrl": "https://kind-cliff-037badd00.2.azurestaticapps.net/",
+        "privacyUrl": "https://kind-cliff-037badd00.2.azurestaticapps.net/",
+        "termsOfUseUrl": "https://kind-cliff-037badd00.2.azurestaticapps.net/"
+    },
+    "description": {
+        "short": "echo",
+        "full": "bot can mirror your messages, and greet you upon launch."
+    },
+    "icons": {
+        "outline": "outline.png",
+        "color": "color.png"
+    },
+    "accentColor": "#FFFFFF",
+    "staticTabs": [
+        {
+            "entityId": "conversations",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "b0057482-0ed6-469f-aa0e-262aabe5f572",
+            "scopes": [
+                "personal",
+                "team",
+                "groupChat"
+            ],
+            "isNotificationOnly": false,
+            "supportsCalling": true,
+            "supportsVideo": true,
+            "supportsFiles": true
+        }
+    ],
+    "validDomains": []
+}
