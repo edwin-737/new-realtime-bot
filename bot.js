@@ -3,7 +3,7 @@
 
 const { ActivityHandler, MessageFactory, TeamsActivityHandler } = require('botbuilder');
 
-export class EchoBot extends TeamsActivityHandler {
+class EchoBot extends TeamsActivityHandler {
     constructor() {
         super();
         this.onTeamsChannelCreatedEvent(async (channelInfo, teamInfo, turnContext, next) => {
