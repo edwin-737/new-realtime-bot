@@ -9,7 +9,6 @@ const ENV_FILE = path.join(__dirname, '.env');
 dotenv.config({ path: ENV_FILE });
 
 const restify = require('restify');
-var cors = require("cors");
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
@@ -22,15 +21,6 @@ const {
 // This bot's main dialog.
 const { EchoBot } = require('./bot');
 
-// Create HTTP server
-const server = restify.createServer();
-server.use(restify.plugins.bodyParser());
-server.use(cors());
-server.listen(process.env.port || process.env.PORT || 3978, () => {
-    console.log(`\n${server.name} listening to ${server.url}`);
-    console.log('\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator');
-    console.log('\nTo talk to your bot, open the emulator select "Open Bot"');
-});
 
 const credentialsFactory = new ConfigurationServiceClientCredentialFactory({
     MicrosoftAppId: process.env.MicrosoftAppId,
@@ -71,11 +61,21 @@ adapter.onTurnError = onTurnErrorHandler;
 // Create the main dialog.
 const myBot = new EchoBot();
 
+
+// Create HTTP server
+const server = restify.createServer();
+server.listen(process.env.port || process.env.PORT || 3978, () => {
+    console.log(`\n${server.name} listening to ${server.url}`);
+    console.log('\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator');
+    console.log('\nTo talk to your bot, open the emulator select "Open Bot"');
+});
+server.use(restify.plugins.bodyParser());
+
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
-    // Route received a request to adapter for processing
     console.log(req.body);
-    await adapter.process(req, res, (context) => myBot.run(context));
+    // Route received a request to adapter for processing
+    await adapter.processActivity(req, res, async (context) => await myBot.run(context));
 });
 
 // Listen for Upgrade requests for Streaming.
