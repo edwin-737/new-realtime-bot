@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-const { ActivityHandler, MessageFactory, TeamsActivityHandler, CardFactory, ConsoleTranscriptLogger } = require('botbuilder');
+const { MessageFactory, TeamsActivityHandler } = require('botbuilder');
 
 class EchoBot extends TeamsActivityHandler {
     constructor() {
@@ -9,7 +9,7 @@ class EchoBot extends TeamsActivityHandler {
         this.onMessage(async (context, next) => {
 
             const replyText = `Echo: ${context.activity.text}`;
-            console.log('onMessage called ' + replyText);
+            console.log('onMessage called\n' + replyText);
             await context.sendActivity(MessageFactory.text(replyText, replyText));
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -17,7 +17,8 @@ class EchoBot extends TeamsActivityHandler {
         // Listen to MembersAdded event, view https://docs.microsoft.com/en-us/microsoftteams/platform/resources/bot-v3/bots-notifications for more events
         this.onMembersAdded(async (context, next) => {
             const membersAdded = context.activity.membersAdded;
-            const welcomeText = "welcome, the bot works on teams!"
+            const welcomeText = "welcome, the bot works on teams!";
+            console.log('onMembers added called\n' + welcomeText);
             for (let cnt = 0; cnt < membersAdded.length; cnt++) {
                 if (membersAdded[cnt].id) {
                     await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
