@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+
 //https://github.com/OfficeDev/Microsoft-Teams-Samples/blob/main/samples/bot-conversation/nodejs/bots/teamsConversationBot.js
 const {
     ActionTypes,
@@ -11,8 +12,8 @@ const {
 } = require('botbuilder');
 const TextEncoder = require('util').TextEncoder;
 const ACData = require('adaptivecards-templating');
-const AdaptiveCardTemplate = require('./resources/UserMentionCardTemplate.json');
-const ImmersiveReaderCardTemplate = require('./resources/ImmersiveReaderCard.json');
+const AdaptiveCardTemplate = require('../resources/UserMentionCardTemplate.json');
+const ImmersiveReaderCardTemplate = require('../resources/ImmersiveReaderCard.json');
 
 class TeamsConversationBot extends TeamsActivityHandler {
     constructor() {
