@@ -1,13 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-const { ActivityHandler, MessageFactory, TeamsActivityHandler } = require('botbuilder');
+const { ActivityHandler, MessageFactory, TeamsActivityHandler, CardFactory, ConsoleTranscriptLogger } = require('botbuilder');
 
 class EchoBot extends TeamsActivityHandler {
     constructor() {
         super();
         this.onTeamsChannelCreatedEvent(async (channelInfo, teamInfo, turnContext, next) => {
             const card = CardFactory.heroCard('Channel Created', `${channelInfo.name} is the Channel created`);
+            console.log('Channel created,' + channelInfo.name + 'is the Channel created');
             const message = MessageFactory.attachment(card);
             // Sends a message activity to the sender of the incoming activity.
             await turnContext.sendActivity(message);
