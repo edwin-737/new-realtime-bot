@@ -24,25 +24,25 @@ class TeamsConversationBot extends TeamsActivityHandler {
             const text = context.activity.text.trim().toLocaleLowerCase();
             if (text.includes('mention me')) {
                 await this.mentionAdaptiveCardActivityAsync(context);
-            }
-            else if (text.includes('mention')) {
+            } else if (text.includes('mention')) {
                 await this.mentionActivityAsync(context);
-            }
-            else if (text.includes('update')) {
+            } else if (text.includes('update')) {
                 await this.cardActivityAsync(context, true);
-            }
-            else if (text.includes('delete')) {
+            } else if (text.includes('delete')) {
                 await this.deleteCardActivityAsync(context);
-            }
-            else if (text.includes('message')) {
+            } else if (text.includes('message')) {
                 await this.messageAllMembersAsync(context);
-            }
-            else {
+            } else if (text.includes('who')) {
+                await this.getSingleMember(context);
+            } else if (text.includes('immersivereader')) {
+                await this.getImmersivereaderCard(context);
+            } else {
                 await this.cardActivityAsync(context, false);
             }
 
             await next();
         });
+
         this.onMembersAddedActivity(async (context, next) => {
             await Promise.all((context.activity.membersAdded || []).map(async (member) => {
                 if (member.id !== context.activity.recipient.id && context.activity.conversation.conversationType !== 'personal') {
@@ -54,25 +54,42 @@ class TeamsConversationBot extends TeamsActivityHandler {
 
             await next();
         });
-        // // This method registers the lambda function, which will be invoked when message sent by user is updated in chat.
-        // this.onTeamsMessageEditEvent(async (context, next) => {
-        //     let editedMessage = context.activity.text;
-        //     await context.sendActivity(`The edited message is ${editedMessage}"`);
-        //     next();
-        // });
 
-        // // This method registers the lambda function, which will be invoked when message sent by user is undeleted in chat.
-        // this.onTeamsMessageUndeleteEvent(async (context, next) => {
-        //     let undeletedMessage = context.activity.text;
-        //     await context.sendActivity(`Previously the message was deleted. After undeleting, the message is now: "${undeletedMessage}"`);
-        //     next();
-        // });
+        this.onReactionsAdded(async (context) => {
+            await Promise.all((context.activity.reactionsAdded || []).map(async (reaction) => {
+                const newReaction = `You reacted with '${reaction.type}' to the following message: '${context.activity.replyToId}'`;
+                await context.sendActivity(newReaction);
+                // Save information about the sent message and its ID (resourceResponse.id).
+            }));
+        });
 
-        // // This method registers the lambda function, which will be invoked when message sent by user is soft deleted in chat.
-        // this.onTeamsMessageSoftDeleteEvent(async (context, next) => {
-        //     await context.sendActivity("Message is soft deleted");
-        //     next();
-        // });
+        this.onReactionsRemoved(async (context) => {
+            await Promise.all((context.activity.reactionsRemoved || []).map(async (reaction) => {
+                const newReaction = `You removed the reaction '${reaction.type}' from the message: '${context.activity.replyToId}'`;
+                await context.sendActivity(newReaction);
+                // Save information about the sent message and its ID (resourceResponse.id).
+            }));
+        });
+
+        // This method registers the lambda function, which will be invoked when message sent by user is updated in chat.
+        this.onTeamsMessageEditEvent(async (context, next) => {
+            let editedMessage = context.activity.text;
+            await context.sendActivity(`The edited message is ${editedMessage}"`);
+            next();
+        });
+
+        // This method registers the lambda function, which will be invoked when message sent by user is undeleted in chat.
+        this.onTeamsMessageUndeleteEvent(async (context, next) => {
+            let undeletedMessage = context.activity.text;
+            await context.sendActivity(`Previously the message was deleted. After undeleting, the message is now: "${undeletedMessage}"`);
+            next();
+        });
+
+        // This method registers the lambda function, which will be invoked when message sent by user is soft deleted in chat.
+        this.onTeamsMessageSoftDeleteEvent(async (context, next) => {
+            await context.sendActivity("Message is soft deleted");
+            next();
+        });
     }
 
     async onInstallationUpdateActivity(context) {
