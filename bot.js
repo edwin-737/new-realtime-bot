@@ -4,7 +4,9 @@
 const {
     MessageFactory,
     TeamsActivityHandler,
-    TeamsInfo
+    TeamsInfo,
+    CardFactory,
+    ActionTypes,
 } = require('botbuilder');
 
 class EchoBot extends TeamsActivityHandler {
@@ -21,10 +23,10 @@ class EchoBot extends TeamsActivityHandler {
 
             // //send the message to the desired channel
             const activity = MessageFactory.text(question);
-            // const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
-            // await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
-            //     await turnContext.sendActivity(MessageFactory.text(question));
-            // });
+            const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
+            await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
+                await turnContext.sendActivity(MessageFactory.text(question));
+            });
 
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -43,6 +45,40 @@ class EchoBot extends TeamsActivityHandler {
             await next();
         });
     }
+    // async cardActivityAsync(context, isUpdate) {
+    //     const cardActions = [
+    //         {
+    //             type: ActionTypes.MessageBack,
+    //             title: 'Message all members',
+    //             value: null,
+    //             text: 'MessageAllMembers'
+    //         }
+    //     ];
+
+    //     if (isUpdate) {
+    //         await this.sendUpdateCard(context, cardActions);
+    //     } else {
+    //         await this.sendWelcomeCard(context, cardActions);
+    //     }
+    // }
+    // async sendWelcomeCard(context, cardActions) {
+    //     const initialValue = {
+    //         count: 0
+    //     };
+    //     cardActions.push({
+    //         type: ActionTypes.MessageBack,
+    //         title: 'Update Card',
+    //         value: initialValue,
+    //         text: 'UpdateCardAction'
+    //     });
+    //     const card = CardFactory.heroCard(
+    //         'Welcome card',
+    //         '',
+    //         null,
+    //         cardActions
+    //     );
+    //     await context.sendActivity(MessageFactory.attachment(card));
+    // }
 
 }
 module.exports.EchoBot = EchoBot;
