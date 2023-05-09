@@ -16,9 +16,12 @@
         "url": "https://github.com"
     },
     "dependencies": {
+        "@microsoft/microsoft-graph-client": "^3.0.5",
         "botbuilder": "~4.15.0",
         "cors": "^2.8.5",
         "dotenv": "~8.2.0",
+        "fetch": "^1.1.0",
+        "isomorphic-fetch": "^3.0.0",
         "mocha": "^10.2.0",
         "openai": "^3.2.1",
         "restify": "~8.5.1"

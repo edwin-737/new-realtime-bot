@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
 const path = require('path');
-
 const dotenv = require('dotenv');
 // Import required bot configuration.
 const ENV_FILE = path.join(__dirname, '.env');
@@ -10,6 +8,9 @@ dotenv.config({ path: ENV_FILE });
 
 const restify = require('restify');
 
+//Import graph
+const { Graph } = require('./graph/graph')
+const myGraph = new Graph();
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const {
@@ -18,7 +19,7 @@ const {
 } = require('botbuilder');
 
 // This bot's main dialog.
-const { EchoBot } = require('./bot');
+const { AnonymousBot } = require('./bot');
 
 // Create HTTP server
 const server = restify.createServer();
@@ -61,11 +62,23 @@ const onTurnErrorHandler = async (context, error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the main dialog.
-const myBot = new EchoBot();
+const myBot = new AnonymousBot();
 
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
     console.log(req.body);
+    if (req.body.conversation.conversationType == 'psersonal')
+        myGraph.setId(req.body.from.id);
     // Route received a request to adapter for processing
     await adapter.process(req, res, async (context) => await myBot.run(context));
+});
+server.post('/api/graph', async (req, res) => {
+    console.log(req.body);
+    await myGraph.getJoinedTeams()
+        .then(res => {
+            const data = res.data;
+            console.log('retrieved users joined teams');
+            console.log(data);
+        })
+
 });
