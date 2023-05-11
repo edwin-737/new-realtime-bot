@@ -81,7 +81,7 @@ class AnonymousBot extends TeamsActivityHandler {
             newCardAction.title = teamsList[idx].displayName;
             newCardAction.text = teamsList[idx].displayName;
         }
-        await this.sendUpdateCard(context, cardActions);
+        await this.sendTeamCard(context, cardActions);
     }
 
     async sendTeamCard(context, cardActions) {
