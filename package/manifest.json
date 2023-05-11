@@ -2,11 +2,11 @@
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
     "version": "1.0.0",
     "manifestVersion": "1.16",
-    "id": "74d27d1a-092f-4b47-8d16-a9b036ca8a9c",
+    "id": "d9a9ecc5-a386-47be-a1cd-d119f2100673",
     "packageName": "com.package.name",
     "name": {
-        "short": "newRealtimeBot_v2",
-        "full": "newRealtimeBot_v2"
+        "short": "multitenant-bot",
+        "full": "multitenant-bot"
     },
     "developer": {
         "name": "SUTD-UROP",
@@ -16,8 +16,8 @@
         "termsOfUseUrl": "https://kind-cliff-037badd00.2.azurestaticapps.net/"
     },
     "description": {
-        "short": "echo",
-        "full": "bot can mirror your messages, and greet you upon launch."
+        "short": "this bot can send allow you to send anonymous questions to a channel",
+        "full": "A user can send a personal message to this bot, a question. Then the user can specify a channel that he wants the message to be sent to. The bot sends the message to that channel, and others can view it, and reply to it, but the original author of the question remains anonymous."
     },
     "icons": {
         "outline": "outline.png",
@@ -40,11 +40,24 @@
     ],
     "bots": [
         {
-            "botId": "b0057482-0ed6-469f-aa0e-262aabe5f572",
+            "botId": "f3ca1bc9-f15d-4193-8e96-59229eded721",
             "scopes": [
                 "personal",
                 "team",
                 "groupChat"
+            ],
+            "commandLists": [
+                {
+                    "commands": [
+                        {
+                            "title": "start",
+                            "description": "command to start the bot"
+                        }
+                    ],
+                    "scopes": [
+                        "personal"
+                    ]
+                }
             ],
             "isNotificationOnly": false,
             "supportsCalling": true,
@@ -52,5 +65,9 @@
             "supportsFiles": true
         }
     ],
-    "validDomains": []
+    "validDomains": [],
+    "webApplicationInfo": {
+        "id": "f3ca1bc9-f15d-4193-8e96-59229eded721",
+        "resource": ""
+    }
 }

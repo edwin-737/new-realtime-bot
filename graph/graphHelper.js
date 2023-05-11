@@ -35,9 +35,16 @@ function ensureGraphForAppOnlyAuth(settings) {
     }
 }
 
-async function retrieveJoinedTeamsAsync(id) {
-    return _appClient?.api('/users/' + 'a495e614-3794-4de3-847e-d2b6d4856c0b' + '/joinedTeams')
+async function retrieveJoinedTeamsAsync(userId) {
+    return _appClient?.api('/users/' + userId + '/joinedTeams')
         .get();
+}
+async function retrieveChannelsAsync(teamId) {
+    return _appClient.api('/teams/' + teamId + '/channels')
+        .get();
+}
+async function retrieveConversationsAsync(channelId) {
+    return _appClient.api('/groups/' + channelId + '/conversations')
 }
 //Functions below are for scopes using application permissions 
 async function retrieveUsersAsync() {
@@ -56,5 +63,7 @@ module.exports = {
     ensureGraphForAppOnlyAuth,
     retrieveJoinedTeamsAsync,
     retrieveUserEmail,
-    retrieveUsersAsync
+    retrieveUsersAsync,
+    retrieveChannelsAsync,
+    retrieveConversationsAsync
 }

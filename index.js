@@ -21,7 +21,7 @@ const {
 
 // This bot's main dialog.
 const { AnonymousBot } = require('./bot');
-const { retrieveJoinedTeamsAsync, retrieveUsersAsync } = require('./graph/graphHelper');
+const { retrieveJoinedTeamsAsync, retrieveChannelsAsync, retrieveConversationsAsync } = require('./graph/graphHelper');
 
 // Create HTTP server
 const server = restify.createServer();
@@ -73,12 +73,27 @@ server.post('/api/messages', async (req, res) => {
     await adapter.process(req, res, async (context) => await myBot.run(context));
 });
 //for testing graph api
-server.get('/api/graph', async (req, res) => {
-    await retrieveJoinedTeamsAsync('1')
+server.post('/api/graph/teams', async (req, res) => {
+    await myGraph.getJoinedTeams(req.body.id)
         .then(teams => {
             console.log('retrieved users joined teams');
             console.log(teams);
             res.send(teams);
         });
-
+});
+server.post('/api/graph/channels', async (req, res) => {
+    await myGraph.getJoinedChannels(req.body.id)
+        .then(channels => {
+            console.log('retireved channels in team');
+            console.log(channels);
+            res.send(channels);
+        });
+});
+server.post('/api/graph/conversations', async (req, res) => {
+    await myGraph.getConversationsWithBot(req.body.id)
+        .then(conversations => {
+            console.log('retireved conversations in channel');
+            console.log(conversations);
+            res.send(conversations);
+        });
 });
