@@ -74,7 +74,8 @@ server.post('/api/messages', async (req, res) => {
 });
 //for testing graph api
 server.post('/api/graph/teams', async (req, res) => {
-    await myGraph.getJoinedTeams(req.body.id)
+    myGraph.setUserId(req.body.id);
+    await myGraph.getJoinedTeams()
         .then(teams => {
             console.log('retrieved users joined teams');
             console.log(teams);
@@ -82,7 +83,8 @@ server.post('/api/graph/teams', async (req, res) => {
         });
 });
 server.post('/api/graph/channels', async (req, res) => {
-    await myGraph.getJoinedChannels(req.body.id)
+    myGraph.setChosenTeamId(req.body.id);
+    await myGraph.getJoinedChannels()
         .then(channels => {
             console.log('retireved channels in team');
             console.log(channels);
@@ -90,7 +92,8 @@ server.post('/api/graph/channels', async (req, res) => {
         });
 });
 server.post('/api/graph/conversations', async (req, res) => {
-    await myGraph.getConversationsWithBot(req.body.id)
+    myGraph.setChosenChannelId(req.body.id);
+    await myGraph.getConversationsWithBot()
         .then(conversations => {
             console.log('retireved conversations in channel');
             console.log(conversations);
