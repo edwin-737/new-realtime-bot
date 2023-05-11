@@ -85,8 +85,6 @@ class AnonymousBot extends TeamsActivityHandler {
     }
 
     async sendTeamCard(context, cardActions) {
-        const data = context.activity.value;
-        data.count += 1;
         const card = CardFactory.heroCard(
             'Choose team',
             `Choose a team`,
