@@ -24,7 +24,7 @@ class AnonymousBot extends TeamsActivityHandler {
             const messageText = context.activity.text.trim().toLocaleLowerCase();
             /*for debugging, checking if graph api returns teams joined by user*/
             if (messageText.includes("listteams")) {
-                await this._graph.getJoinedTeams(userId)
+                await this._graph.getJoinedTeams('29:19nZ-61P-BgH2c0-q_mnoMJwOJu_PrCgF-rSlzMFfjBlDxB-PZDf56AzfaK9-J3uW2kIuIVYtOxZZqGFtyrNp6Q')
                     .then((res) => {
                         const data = res.data;
                         console.log(data);

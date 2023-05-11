@@ -36,7 +36,7 @@ function ensureGraphForAppOnlyAuth(settings) {
 }
 
 async function retrieveJoinedTeamsAsync(id) {
-    return _appClient?.api('/users/' + id + '/joinedTeams')
+    return _appClient?.api('/users/' + 'a495e614-3794-4de3-847e-d2b6d4856c0b' + '/joinedTeams')
         .get();
 }
 //Functions below are for scopes using application permissions 

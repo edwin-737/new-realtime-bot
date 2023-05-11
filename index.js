@@ -10,6 +10,7 @@ const restify = require('restify');
 
 //Import graph
 const { Graph } = require('./graph/graph')
+require('./graph/graphHelper');
 const myGraph = new Graph();
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
@@ -20,6 +21,7 @@ const {
 
 // This bot's main dialog.
 const { AnonymousBot } = require('./bot');
+const { retrieveJoinedTeamsAsync, retrieveUsersAsync } = require('./graph/graphHelper');
 
 // Create HTTP server
 const server = restify.createServer();
@@ -67,18 +69,16 @@ const myBot = new AnonymousBot();
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
     console.log(req.body);
-    if (req.body.conversation.conversationType == 'psersonal')
-        myGraph.setId(req.body.from.id);
     // Route received a request to adapter for processing
     await adapter.process(req, res, async (context) => await myBot.run(context));
 });
-server.post('/api/graph', async (req, res) => {
-    console.log(req.body);
-    await myGraph.getJoinedTeams()
-        .then(res => {
-            const data = res.data;
+//for testing graph api
+server.get('/api/graph', async (req, res) => {
+    await retrieveJoinedTeamsAsync('1')
+        .then(teams => {
             console.log('retrieved users joined teams');
-            console.log(data);
-        })
+            console.log(teams);
+            res.send(teams);
+        });
 
 });
