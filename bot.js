@@ -76,10 +76,12 @@ class AnonymousBot extends TeamsActivityHandler {
             value: null,
             text: 'fillThis'
         }
+        //Populate cardActions using the list of teams passed in
         for (let idx = 0; idx < teamsList.length; idx++) {
             var newCardAction = cardActionTemplate;
             newCardAction.title = teamsList[idx].displayName;
             newCardAction.text = teamsList[idx].displayName;
+            cardActions.push(newCardAction);
         }
         await this.sendTeamCard(context, cardActions);
     }
@@ -91,9 +93,9 @@ class AnonymousBot extends TeamsActivityHandler {
             null,
             cardActions
         );
-        card.id = context.activity.replyToId;
+        card.id = context.activity.id;
         const message = MessageFactory.attachment(card);
-        message.id = context.activity.replyToId;
+        message.id = context.activity.id;
         await context.updateActivity(message);
     }
 
