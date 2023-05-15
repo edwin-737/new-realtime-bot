@@ -11,11 +11,6 @@ const {
 const {
     Graph
 } = require('./graph/graph');
-const state = {
-    "LIST_TEAMS": 0,
-    "LIST_CHANNELS": 1,
-    "LIST_CONVERSATIONS": 2
-}
 class AnonymousBot extends TeamsActivityHandler {
     constructor() {
         super();
@@ -26,17 +21,23 @@ class AnonymousBot extends TeamsActivityHandler {
             /*for debugging, checking if graph api returns teams joined by user*/
             if (messageText === "start") {
                 var teams = [];
-                this._graph.setUserId(userId);
+                this._graph.setUserId('a495e614-3794-4de3-847e-d2b6d4856c0b');
                 await this._graph.getJoinedTeams()
-                    .then((retrievedTeams) => {
-                        teams = retrievedTeams;
+                    .then(async (retrievedTeams) => {
+                        teams = retrievedTeams.value;
                     });
+                console.log('teams retireved');
+                console.log(teams);
                 await this.cardActivityAsync(context, teams);
             }
-            /*else if (messageText === "channls") {
+            else if (messageText === "choose_channel") {
                 var channels = [];
-                await this._graph.getJoinedChannels()
-            }*/
+                console.log('choosing team...');
+                const message = MessageFactory.text("choosing channel");
+                await this.sendActivity(message);
+
+                // await this._graph.getJoinedChannels()
+            }
             else {
                 //for now test using a known teamsChannelId
                 //Replace with teamsChannelId retrieved from some database, or Microsoft Graph
@@ -76,9 +77,11 @@ class AnonymousBot extends TeamsActivityHandler {
             value: null,
             text: 'fillThis'
         }
+        console.log(teamsList);
         //Populate cardActions using the list of teams passed in
         for (let idx = 0; idx < teamsList.length; idx++) {
             var newCardAction = cardActionTemplate;
+            console.log(idx + ' ' + teamsList[idx]);
             newCardAction.title = teamsList[idx].displayName;
             newCardAction.text = teamsList[idx].displayName;
             cardActions.push(newCardAction);
@@ -95,8 +98,9 @@ class AnonymousBot extends TeamsActivityHandler {
         );
         card.id = context.activity.id;
         const message = MessageFactory.attachment(card);
+        message.text = "choose_channel"
         message.id = context.activity.id;
-        await context.updateActivity(message);
+        await context.sendActivity(message);
     }
 
 }
