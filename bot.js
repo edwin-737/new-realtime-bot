@@ -16,9 +16,9 @@ class AnonymousBot extends TeamsActivityHandler {
         super();
         this._graph = new Graph();
         this.onMessage(async (context, next) => {
-            // const userId = context.activity.from.aadObjectId;
-            const userId = "a495e614-3794-4de3-847e-d2b6d4856c0b";
-            const messageText = context.activity.text.trim().toLocaleLowerCase();
+            const userId = context.activity.from.aadObjectId;
+            // const userId = "a495e614-3794-4de3-847e-d2b6d4856c0b";
+            const messageText = context.activity.text.trim();
             /*let user choose which team to post question to */
             if (messageText === "start") {
                 var teams = [];
