@@ -69,7 +69,7 @@ class AnonymousBot extends TeamsActivityHandler {
                     await context.sendActivity(MessageFactory.text('Select a team and channel first. Send a "start" command.'));
                 }
                 else {
-                    const question = messageText;
+                    const question = context.activity.text;
                     //send the message to the desired channel
                     const activity = MessageFactory.text(question);
                     const teamsChannelId = this._graph.getChosenChannelId();
@@ -99,26 +99,25 @@ class AnonymousBot extends TeamsActivityHandler {
     }
 
     async cardActivityAsync(context, genericList, typeOfCard) {
-        var cardActions = [];
-        var cardActionTemplate = {
-            type: ActionTypes.MessageBack,
-            title: 'fill this',
-            value: null,
-            text: 'fillThis'
-        }
-        console.log(genericList);
+        var cardActions = new Array(genericList.length);
+        var cardActionTemplate =
+            console.log(genericList);
         var trailingText = "";
         if (typeOfCard === "channels")
             trailingText = 'send_message/';
         else if (typeOfCard == "teams")
             trailingText = "choose_channel/"
         //Populate cardActions using the list of teams passed in
-        for (let idx = 0; idx < genericList.length; idx++) {
-            var newCardAction = cardActionTemplate;
-            console.log(idx + ' ' + genericList[idx]);
+        for (var idx = 0; idx < genericList.length; idx++) {
+            var newCardAction = {
+                type: ActionTypes.MessageBack,
+                title: 'fill this',
+                value: null,
+                text: 'fillThis'
+            };
             newCardAction.title = genericList[idx].displayName;
             newCardAction.text = trailingText + genericList[idx].id;
-            cardActions.push(newCardAction);
+            cardActions[idx] = newCardAction;
         }
         await this.sendTeamCard(context, cardActions);
     }
