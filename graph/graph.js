@@ -34,14 +34,14 @@ class Graph {
     setChosenConversationId(chosenConversationId) {
         this.chosenConversationId = chosenConversationId;
     }
-    async getJoinedTeams() {
-        return retrieveJoinedTeamsAsync(this.userId);
+    async getJoinedTeams(user) {
+        return retrieveJoinedTeamsAsync(user);
     }
-    async getJoinedChannels() {
-        return retrieveChannelsAsync(this.chosenTeamId);
+    async getJoinedChannels(chosenTeam) {
+        return retrieveChannelsAsync(chosenTeam);
     }
-    async getConversationsWithBot() {
-        return retrieveConversationsAsync(this.chosenChannelId);
+    async getConversationsWithBot(chosenChannel) {
+        return retrieveConversationsAsync(chosenChannel);
     }
 }
 module.exports.Graph = Graph;

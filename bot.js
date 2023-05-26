@@ -16,40 +16,68 @@ class AnonymousBot extends TeamsActivityHandler {
         super();
         this._graph = new Graph();
         this.onMessage(async (context, next) => {
-            const userId = context.activity.from.aadObjectId;
+            // const userId = context.activity.from.aadObjectId;
+            const userId = "a495e614-3794-4de3-847e-d2b6d4856c0b";
             const messageText = context.activity.text.trim().toLocaleLowerCase();
-            /*for debugging, checking if graph api returns teams joined by user*/
+            /*let user choose which team to post question to */
             if (messageText === "start") {
                 var teams = [];
-                this._graph.setUserId('a495e614-3794-4de3-847e-d2b6d4856c0b');
-                await this._graph.getJoinedTeams()
+                this._graph.setUserId(userId);
+                // this._graph.setUserId("a495e614-3794-4de3-847e-d2b6d4856c0b");
+                await this._graph.getJoinedTeams(userId)
                     .then(async (retrievedTeams) => {
                         teams = retrievedTeams.value;
                     });
                 console.log('teams retireved');
                 console.log(teams);
-                await this.cardActivityAsync(context, teams);
+                await this.cardActivityAsync(context, teams, "teams");
             }
-            else if (messageText === "choose_channel") {
+            /*let user choose which channel to post to */
+            else if (messageText.startsWith("choose_channel/")) {
                 var channels = [];
-                console.log('choosing team...');
-                const message = MessageFactory.text("choosing channel");
-                await this.sendActivity(message);
+                var teamId = messageText.replace("choose_channel/", "")
+                this._graph.setChosenTeamId(teamId);
+                console.log('choosing channel for team:' + teamId + "/");
+                await this._graph.getJoinedChannels(teamId)
+                    .then(async (retrievedChannels) => {
+                        channels = retrievedChannels.value;
+                    });
+                console.log('channels retrieved');
+                console.log(channels);
+                await this.cardActivityAsync(context, channels, "channels");
 
-                // await this._graph.getJoinedChannels()
             }
-            else {
+            else if (messageText.startsWith("send_message/")) {
                 //for now test using a known teamsChannelId
                 //Replace with teamsChannelId retrieved from some database, or Microsoft Graph
-                const teamsChannelId = '19:68d2027a02114599be34f2bf95901699@thread.tacv2';
-                const question = context.activity.text;
+                const teamsChannelId = messageText.replace("send_message/", "");
+                this._graph.setChosenChannelId(teamsChannelId);
 
-                //send the message to the desired channel
-                const activity = MessageFactory.text(question);
-                const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
-                await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
-                    await turnContext.sendActivity(MessageFactory.text(question));
-                });
+                // const question = context.activity.text;
+
+                context.sendActivity(MessageFactory.text('Send your message now'));
+
+                // //send the message to the desired channel
+                // const activity = MessageFactory.text(question);
+                // const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
+                // await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
+                //     await turnContext.sendActivity(MessageFactory.text(question));
+                // });
+            }
+            else {
+                if (this._graph.getChosenChannelId() === '') {
+                    await context.sendActivity(MessageFactory.text('Select a team and channel first. Send a "start" command.'));
+                }
+                else {
+
+                    //send the message to the desired channel
+                    const activity = MessageFactory.text(question);
+                    const teamsChannelId = this._graph.getChosenChannelId();
+                    const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
+                    await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
+                        await turnContext.sendActivity(MessageFactory.text(question));
+                    });
+                }
             }
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -69,7 +97,7 @@ class AnonymousBot extends TeamsActivityHandler {
         });
     }
 
-    async cardActivityAsync(context, teamsList) {
+    async cardActivityAsync(context, genericList, typeOfCard) {
         var cardActions = [];
         var cardActionTemplate = {
             type: ActionTypes.MessageBack,
@@ -77,13 +105,18 @@ class AnonymousBot extends TeamsActivityHandler {
             value: null,
             text: 'fillThis'
         }
-        console.log(teamsList);
+        console.log(genericList);
+        var trailingText = "";
+        if (typeOfCard === "channels")
+            trailingText = 'send_message/';
+        else if (typeOfCard == "teams")
+            trailingText = "choose_channel/"
         //Populate cardActions using the list of teams passed in
-        for (let idx = 0; idx < teamsList.length; idx++) {
+        for (let idx = 0; idx < genericList.length; idx++) {
             var newCardAction = cardActionTemplate;
-            console.log(idx + ' ' + teamsList[idx]);
-            newCardAction.title = teamsList[idx].displayName;
-            newCardAction.text = teamsList[idx].displayName;
+            console.log(idx + ' ' + genericList[idx]);
+            newCardAction.title = genericList[idx].displayName;
+            newCardAction.text = trailingText + genericList[idx].id;
             cardActions.push(newCardAction);
         }
         await this.sendTeamCard(context, cardActions);
@@ -98,8 +131,7 @@ class AnonymousBot extends TeamsActivityHandler {
         );
         card.id = context.activity.id;
         const message = MessageFactory.attachment(card);
-        message.text = "choose_channel"
-        message.id = context.activity.id;
+        // message.id = context.activity.id;
         await context.sendActivity(message);
     }
 
