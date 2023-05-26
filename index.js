@@ -17,9 +17,6 @@ const myGraph = new Graph();
 const {
     CloudAdapter,
     ConfigurationBotFrameworkAuthentication,
-    MemoryStorage,
-    ConversationState,
-    UserState
 } = require('botbuilder');
 
 // This bot's main dialog.

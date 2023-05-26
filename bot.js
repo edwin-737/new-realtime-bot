@@ -55,7 +55,7 @@ class AnonymousBot extends TeamsActivityHandler {
 
                 // const question = context.activity.text;
 
-                context.sendActivity(MessageFactory.text('Send your message now'));
+                await context.sendActivity(MessageFactory.text('Send your message now'));
 
                 // //send the message to the desired channel
                 // const activity = MessageFactory.text(question);
@@ -73,6 +73,7 @@ class AnonymousBot extends TeamsActivityHandler {
                     //send the message to the desired channel
                     const activity = MessageFactory.text(question);
                     const teamsChannelId = this._graph.getChosenChannelId();
+                    console.log(teamsChannelId);
                     const [reference] = await TeamsInfo.sendMessageToTeamsChannel(context, activity, teamsChannelId, process.env.MicrosoftAppId);
                     await context.adapter.continueConversationAsync(process.env.MicrosoftAppId, reference, async turnContext => {
                         await turnContext.sendActivity(MessageFactory.text(question));
