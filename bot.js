@@ -69,7 +69,7 @@ class AnonymousBot extends TeamsActivityHandler {
                     await context.sendActivity(MessageFactory.text('Select a team and channel first. Send a "start" command.'));
                 }
                 else {
-
+                    const question = messageText;
                     //send the message to the desired channel
                     const activity = MessageFactory.text(question);
                     const teamsChannelId = this._graph.getChosenChannelId();
