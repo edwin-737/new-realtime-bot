@@ -19,18 +19,18 @@ class AnonymousBot extends TeamsActivityHandler {
         this.onMessage(async (context, next) => {
             const messageText = context.activity.text.trim();
             /*give user info about the bot */
-            if (messageText === "/help") {
+            if (messageText === '/help') {
                 const helpText = texts.help;
                 await context.sendActivity(MessageFactory.text(helpText, helpText));
             }
             /*let user choose which team to post question to */
-            else if (messageText === "/start") {
+            else if (messageText === '/start') {
                 this._graph.resetAllFields();
                 var teams = [];
                 const id = context.activity.from.aadObjectId;
                 const name = context.activity.from.name;
-                // const id = "a495e614-3794-4de3-847e-d2b6d4856c0b";
-                // const name = "conard samlu";
+                // const id = 'a495e614-3794-4de3-847e-d2b6d4856c0b';
+                // const name = 'conard samlu';
                 const user = {
                     name: name,
                     id: id
@@ -42,26 +42,26 @@ class AnonymousBot extends TeamsActivityHandler {
                     });
                 console.log('teams retireved');
                 console.log(teams);
-                await this.cardActivityAsync(context, teams, "teams");
+                await this.cardActivityAsync(context, teams, 'teams');
             }
             /*let user choose which channel to post to */
-            else if (messageText.startsWith("choose_channel/")) {
+            else if (messageText.startsWith('choose_channel/')) {
                 var channels = [];
                 const nameAndId = messageText.slice(messageText.indexOf('/') + 1, messageText.length);
                 console.log(nameAndId);
                 const team = this.createNameAndIdObject(nameAndId);
                 this._graph.setChosenTeam(team);
-                console.log('choosing channel for team:' + team.id + "/");
+                console.log('choosing channel for team:' + team.id + '/');
                 await this._graph.getJoinedChannels()
                     .then(async (retrievedChannels) => {
                         channels = retrievedChannels.value;
                     });
                 console.log('channels retrieved');
                 console.log(channels);
-                await this.cardActivityAsync(context, channels, "channels");
+                await this.cardActivityAsync(context, channels, 'channels');
 
             }
-            else if (messageText.startsWith("send_message/")) {
+            else if (messageText.startsWith('send_message/')) {
                 //for now test using a known teamsChannelId
                 //Replace with teamsChannelId retrieved from some database, or Microsoft Graph
                 const nameAndId = messageText.slice(messageText.indexOf('/') + 1, messageText.length);
@@ -69,8 +69,8 @@ class AnonymousBot extends TeamsActivityHandler {
                 this._graph.setChosenChannel(channel);
                 console.log(this._graph.getChosenChannel().id);
                 const messageCard = CardFactory.heroCard(
-                    'Send an **anonymous** message',
-                    'Now you are ready to send your message in this chat. Your message will be routed to the channel' + '**' + this._graph.getChosenChannel().name + '** in the team ' + '**' + this._graph.getChosenTeam().name + '**' + 'If you want to change the team or channel, send **/start** again to restart the selection process.',
+                    'Send an <b>anonymous</b> message',
+                    'Now you are ready to send your message in this chat. Your message will be routed to the channel' + '<b>' + this._graph.getChosenChannel().name + '</b> in the team ' + '<b>' + this._graph.getChosenTeam().name + '</b> .If you want to change the team or channel, send <b>/start</b> again to restart the selection process.',
                     null,
                     null,
                 )
@@ -121,11 +121,11 @@ class AnonymousBot extends TeamsActivityHandler {
     async cardActivityAsync(context, genericList, typeOfCard) {
         var cardActions = new Array(genericList.length);
         // console.log(genericList);
-        var trailingText = "";
-        if (typeOfCard === "channels")
+        var trailingText = '';
+        if (typeOfCard === 'channels')
             trailingText = 'send_message/';
-        else if (typeOfCard == "teams")
-            trailingText = "choose_channel/"
+        else if (typeOfCard == 'teams')
+            trailingText = 'choose_channel/'
         //Populate cardActions using the list of teams passed in
         for (var idx = 0; idx < genericList.length; idx++) {
             var newCardAction = {
@@ -138,17 +138,17 @@ class AnonymousBot extends TeamsActivityHandler {
             newCardAction.text = trailingText + genericList[idx].id + '/' + genericList[idx].displayName;
             cardActions[idx] = newCardAction;
         }
-        if (typeOfCard === "channels")
+        if (typeOfCard === 'channels')
             await this.sendChannelCard(context, cardActions);
-        else if (typeOfCard == "teams")
+        else if (typeOfCard == 'teams')
             await this.sendTeamCard(context, cardActions);
 
     }
 
     async sendTeamCard(context, cardActions) {
         const card = CardFactory.heroCard(
-            '**Choose a team**',
-            `Choose the team to send your message to`,
+            'Choose a team',
+            'Choose the team to send your message to',
             null,
             cardActions
         );
@@ -159,8 +159,8 @@ class AnonymousBot extends TeamsActivityHandler {
     }
     async sendChannelCard(context, cardActions) {
         const card = CardFactory.heroCard(
-            '**Choose a channel**',
-            'Choose the channel from the team ' + '**' + this._graph.getChosenTeam().name + '**',
+            'Choose a channel',
+            'Choose the channel from the team ' + '<b>' + this._graph.getChosenTeam().name + '</b>',
             null,
             cardActions
         );
