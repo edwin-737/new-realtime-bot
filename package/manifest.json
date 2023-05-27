@@ -50,8 +50,12 @@
                 {
                     "commands": [
                         {
-                            "title": "start",
+                            "title": "/start",
                             "description": "command to start the bot"
+                        },
+                        {
+                            "title": "/help",
+                            "description": "get info about the bot and steps in using it"
                         }
                     ],
                     "scopes": [

@@ -1,0 +1,4 @@
+{
+    "welcome": "Welcome, this bot can send an anonymous message to any public channel in any public team you are a part of.\n\nCommands:\n\n1. Send **/start** command to begin\n\n2. send **/help** command to get info and steps in using the bot",
+    "help": "When you send a message to this bot, the bot routes the message to the channel you chose, in the channel, the bot sends the message on your behalf, so you remain anonymous.\n\nSteps:\n\n1. Send **/start** to view a list of teams\n\n2. Choose a team from the list\n\n3. Choose a channel from the list of channels in the chosen team\n\n4. Type your message to the bot, and the bot sends the message to the chosen channel on your behalf."
+}

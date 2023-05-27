@@ -4,44 +4,50 @@ settings = require('./appSettings');
 
 class Graph {
     constructor() {
-        this.userId = '';
-        this.chosenTeamId = '';
-        this.chosenChannelId = '';
-        this.chosenConversationId = '';
+        this.user = null;
+        this.chosenTeam = null;
+        this.chosenChannel = null;
+        this.chosenConversation = null;
         ensureGraphForAppOnlyAuth(settings);
     }
-    getUserId() {
-        return this.userId;
+    getUser() {
+        return this.user;
     }
-    setUserId(userId) {
-        this.userId = userId;
+    setUser(user) {
+        this.user = user;
     }
-    getChosenTeamId() {
-        return this.chosenTeamId;
+    getChosenTeam() {
+        return this.chosenTeam;
     }
-    setChosenTeamId(chosenTeamId) {
-        this.chosenTeamId = chosenTeamId;
+    setChosenTeam(chosenTeam) {
+        this.chosenTeam = chosenTeam;
     }
-    getChosenChannelId() {
-        return this.chosenChannelId;
+    getChosenChannel() {
+        return this.chosenChannel;
     }
-    setChosenChannelId(chosenChannelId) {
-        this.chosenChannelId = chosenChannelId;
+    setChosenChannel(chosenChannel) {
+        this.chosenChannel = chosenChannel;
     }
-    getChosenConversationId() {
-        return this.chosenConversationId;
+    getChosenConversation() {
+        return this.chosenConversation;
     }
-    setChosenConversationId(chosenConversationId) {
-        this.chosenConversationId = chosenConversationId;
+    setChosenConversationId(chosenConversation) {
+        this.chosenConversation = chosenConversation;
     }
-    async getJoinedTeams(user) {
-        return retrieveJoinedTeamsAsync(user);
+    resetAllFields() {
+        this.user = null;
+        this.chosenTeam = null;
+        this.chosenChannel = null;
+        this.chosenConversation = null;
     }
-    async getJoinedChannels(chosenTeam) {
-        return retrieveChannelsAsync(chosenTeam);
+    async getJoinedTeams() {
+        return retrieveJoinedTeamsAsync(this.getUser().id);
     }
-    async getConversationsWithBot(chosenChannel) {
-        return retrieveConversationsAsync(chosenChannel);
+    async getJoinedChannels() {
+        return retrieveChannelsAsync(this.getChosenTeam().id);
+    }
+    async getConversationsWithBot() {
+        return retrieveConversationsAsync(this.getChosenChannel().id);
     }
 }
 module.exports.Graph = Graph;
