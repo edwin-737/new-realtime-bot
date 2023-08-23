@@ -70,7 +70,7 @@ class AnonymousBot extends TeamsActivityHandler {
                 console.log(this._graph.getChosenChannel().id);
                 const messageCard = CardFactory.heroCard(
                     'Send an <b>anonymous</b> message',
-                    'Now you are ready to send your message in this chat. Your message will be routed to the channel' + '<b>' + this._graph.getChosenChannel().name + '</b> in the team ' + '<b>' + this._graph.getChosenTeam().name + '</b> .If you want to change the team or channel, send <b>/start</b> again to restart the selection process.',
+                    'Now you are ready to send your message in this chat. Your message will be routed to the channel' + ' <b>' + this._graph.getChosenChannel().name + '</b> in the team ' + '<b>' + this._graph.getChosenTeam().name + '</b>.If you want to change the team or channel, send <b>/start</b> again to restart the selection process.',
                     null,
                     null,
                 )

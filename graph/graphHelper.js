@@ -44,7 +44,7 @@ async function retrieveChannelsAsync(teamId) {
         .get();
 }
 async function retrieveConversationsAsync(channelId) {
-    return _appClient.api('/groups/' + channelId + '/conversations')
+    return _appClient.api('/groups/' + channelId + '/conversations').get()
 }
 //Functions below are for scopes using application permissions 
 async function retrieveUsersAsync() {
