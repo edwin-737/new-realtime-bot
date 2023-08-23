@@ -98,3 +98,6 @@ server.post('/api/graph/conversations', async (req, res) => {
             res.send(conversations);
         });
 });
+server.get('/env', async (req, res) => {
+    console.log(process.env);
+});
